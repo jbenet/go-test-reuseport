@@ -31,11 +31,13 @@ func main() {
 	// d1 := manet.Dialer{}
 	// d2 := manet.Dialer{}
 	d1 := dialer{LocalAddr: "127.0.0.1:11111"}
-	d2 := dialer{LocalAddr: "127.0.0.1:22222"}
+	d2 := dialer{LocalAddr: "127.0.0.1:33333"}
 
 	go func() {
 		l2to1foo, err := l2.Accept()
 		maybeDie(err)
+
+		fmt.Println("safe")
 
 		l1to2bar, err := l1.Accept()
 		maybeDie(err)
