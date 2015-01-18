@@ -3,7 +3,8 @@ package main
 import (
 	"errors"
 	"net"
-	"syscall"
+
+	unix "golang.org/x/sys/unix"
 )
 
 const (
@@ -13,11 +14,11 @@ const (
 	filePrefix            = "port."
 )
 
-var reusePort = syscall.SO_REUSEPORT
-var reuseAddr = syscall.SO_REUSEADDR
+var reusePort = unix.SO_REUSEPORT
+var reuseAddr = unix.SO_REUSEADDR
 
-// getSockaddr parses protocol and address and returns implementor syscall.Sockaddr: syscall.SockaddrInet4 or syscall.SockaddrInet6.
-func getSockaddr(proto, addr string) (sa syscall.Sockaddr, soType int, err error) {
+// getSockaddr parses protocol and address and returns implementor unix.Sockaddr: unix.SockaddrInet4 or unix.SockaddrInet6.
+func getSockaddr(proto, addr string) (sa unix.Sockaddr, soType int, err error) {
 	var (
 		addr4 [4]byte
 		addr6 [16]byte
@@ -36,11 +37,11 @@ func getSockaddr(proto, addr string) (sa syscall.Sockaddr, soType int, err error
 		if ip.IP != nil {
 			copy(addr4[:], ip.IP[12:16]) // copy last 4 bytes of slice to array
 		}
-		return &syscall.SockaddrInet4{Port: ip.Port, Addr: addr4}, syscall.AF_INET, nil
+		return &unix.SockaddrInet4{Port: ip.Port, Addr: addr4}, unix.AF_INET, nil
 	case tcp6:
 		if ip.IP != nil {
 			copy(addr6[:], ip.IP) // copy all bytes of slice to array
 		}
-		return &syscall.SockaddrInet6{Port: ip.Port, Addr: addr6}, syscall.AF_INET6, nil
+		return &unix.SockaddrInet6{Port: ip.Port, Addr: addr6}, unix.AF_INET6, nil
 	}
 }
