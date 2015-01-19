@@ -14,9 +14,6 @@ const (
 	filePrefix            = "port."
 )
 
-var reusePort = unix.SO_REUSEPORT
-var reuseAddr = unix.SO_REUSEADDR
-
 // getSockaddr parses protocol and address and returns implementor unix.Sockaddr: unix.SockaddrInet4 or unix.SockaddrInet6.
 func getSockaddr(proto, addr string) (sa unix.Sockaddr, soType int, err error) {
 	var (
